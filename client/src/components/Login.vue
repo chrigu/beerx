@@ -1,49 +1,35 @@
 <template>
-  <div class="login">
-    <form v-if="!user" class="login__form">
-      <h1>Sign Up</h1>
-      <input v-validate="'required'" v-model="user.username" name="username" type="text" placeholder="username">
-      <div v-if="submitted && errors.has('username')" class="invalid-feedback">{{ errors.first('username') }}</div>
-      <input v-validate="'required|strongPassword'" name="password" v-model="user.password" type="password" placeholder="Password">
-      <div v-if="submitted && errors.has('password')" class="invalid-feedback">{{ errors.first('password') }}</div>
-      <input v-validate="'required|email'" name="email" v-model="user.email" type="email" placeholder="Email">
-      <div v-if="submitted && errors.has('email')" class="invalid-feedback">{{ errors.first('email') }}</div>
-      <br>
-      <button @click="submit">Submit</button>
+  <div class="hello">
+    <form v-if="!signedIn" @submit.prevent="submitLogin">
+      <input v-model="login" type="text" name="" placeholder="Login" >
+      <input v-model="password" type="password" name="" placeholder="Password" >
+      <button>Sign in</button>
     </form>
+    <div v-if="signedIn">
+      <button @click="signOut">Sign Out</button>
+    </div>
+
   </div>
 </template>
 
 <script>
 import { Auth } from "aws-amplify";
-
+// https://github.com/ErikCH/Aws-auth-example/blob/master/src/components/HelloWorld.vue
 export default {
   name: 'username',
   data() {
     return {
-      user: {
-        username: '',
-        email: '',
-        password: '',
-      },
-      awsUser: '',
-      code: '',
-      submitted: false
+      signedIn: false
     };
   },
   methods: {
 
-    submit() {
-      Auth.username({
-        username: this.user.username,
-        password: this.user.password,
-        attributes: {
-          email: this.user.email,
-          nickname: this.user.username
-        },
-        validationData: [] // optional
-      })
-        .then(data => (this.awsUser = data.user))
+    submitLogin() {
+      Auth.signIn(this.login, this.password)
+        .then(user =>{
+            this.$store.state.signedIn = !!user;
+            this.$store.state.user = user;
+        } )
         .catch(err => console.log(err));
     }
   }
