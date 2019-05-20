@@ -19,7 +19,9 @@ export default {
   name: 'username',
   data() {
     return {
-      signedIn: false
+      signedIn: false,
+      login: "",
+      password: ""
     };
   },
   methods: {
