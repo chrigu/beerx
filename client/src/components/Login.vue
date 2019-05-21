@@ -14,26 +14,28 @@
 
 <script>
 import { Auth } from "aws-amplify";
+import { mapActions, mapGetters } from 'vuex'
 // https://github.com/ErikCH/Aws-auth-example/blob/master/src/components/HelloWorld.vue
 export default {
   name: 'username',
   data() {
     return {
-      signedIn: false,
-      login: "",
-      password: ""
+      login: '',
+      password: ''
     };
   },
   methods: {
-
+    ...mapActions(['setUser']),
     submitLogin() {
       Auth.signIn(this.login, this.password)
         .then(user =>{
-            this.$store.state.signedIn = !!user;
-            this.$store.state.user = user;
+            this.setUser(user);
         } )
         .catch(err => console.log(err));
     }
+  },
+  computed: {
+    ...mapGetters(['signedIn'])
   }
 };
 </script>
