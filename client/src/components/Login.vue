@@ -1,41 +1,52 @@
 <template>
-  <div class="hello">
+  <div class="signin">
     <form v-if="!signedIn" @submit.prevent="submitLogin">
-      <input v-model="login" type="text" name="" placeholder="Login" >
-      <input v-model="password" type="password" name="" placeholder="Password" >
+      <input v-model="login" v-validate="'required'" type="text" name="login" placeholder="Login">
+      <div
+        v-if="submitted && errors.has('login')"
+        class="invalid-feedback"
+      >{{ errors.first('login') }}</div>
+      <input v-model="password" v-validate="'required'" type="password" name="pasword" placeholder="Password">
+      <div
+        v-if="submitted && errors.has('password')"
+        class="invalid-feedback"
+      >{{ errors.first('password') }}</div>
       <button>Sign in</button>
     </form>
-    <div v-if="signedIn">
-      <button @click="signOut">Sign Out</button>
-    </div>
-
   </div>
 </template>
 
 <script>
 import { Auth } from "aws-amplify";
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions, mapGetters } from "vuex";
 // https://github.com/ErikCH/Aws-auth-example/blob/master/src/components/HelloWorld.vue
 export default {
-  name: 'username',
+  name: "username",
   data() {
     return {
-      login: '',
-      password: ''
+      login: "",
+      password: "",
+      submitted: false
     };
   },
   methods: {
-    ...mapActions(['setUser']),
+    ...mapActions(["setUser"]),
     submitLogin() {
-      Auth.signIn(this.login, this.password)
-        .then(user =>{
-            this.setUser(user);
-        } )
-        .catch(err => console.log(err));
+      this.submitted = true;
+      this.$validator.validate().then(valid => {
+        if (valid) {
+          Auth.signIn(this.login, this.password)
+            .then(user => {
+              this.setUser(user);
+              this.$router.push('/dashboard')
+            })
+            .catch(err => console.log(err));
+        }
+      });
     }
   },
   computed: {
-    ...mapGetters(['signedIn'])
+    ...mapGetters(["signedIn"])
   }
 };
 </script>
