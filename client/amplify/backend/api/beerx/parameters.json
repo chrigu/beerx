@@ -1,0 +1,10 @@
+{
+    "AppSyncApiName": "beerx",
+    "DynamoDBBillingMode": "PAY_PER_REQUEST",
+    "AuthCognitoUserPoolId": {
+        "Fn::GetAtt": [
+            "authcognitoc028efcb",
+            "Outputs.UserPoolId"
+        ]
+    }
+}
