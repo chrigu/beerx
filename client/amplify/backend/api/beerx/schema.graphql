@@ -1,16 +1,16 @@
-type Blog @model {
+type User @model {
+    id: ID!
+    username: String!
+    email: String! @auth(rules: [{ allow: owner, ownerField: "username" }])
+    firstName: String! @auth(rules: [{ allow: owner, ownerField: "username" }])
+    lastName: String! @auth(rules: [{ allow: owner, ownerField: "username" }])
+    beers: [Beer] @connection(name: "UserBeers")
+}
+
+type Beer @model {
   id: ID!
   name: String!
-  posts: [Post] @connection(name: "BlogPosts")
-}
-type Post @model {
-  id: ID!
-  title: String!
-  blog: Blog @connection(name: "BlogPosts")
-  comments: [Comment] @connection(name: "PostComments")
-}
-type Comment @model {
-  id: ID!
-  content: String
-  post: Post @connection(name: "PostComments")
+  owner: User @connection(name: "UserBeers")
+  style: String
+  brewery: String
 }
