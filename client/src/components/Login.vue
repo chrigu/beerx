@@ -1,12 +1,18 @@
 <template>
   <div class="signin">
-    <form v-if="!signedIn" @submit.prevent="submitLogin">
+    <form @submit.prevent="submitLogin">
       <input v-model="login" v-validate="'required'" type="text" name="login" placeholder="Login">
       <div
         v-if="submitted && errors.has('login')"
         class="invalid-feedback"
       >{{ errors.first('login') }}</div>
-      <input v-model="password" v-validate="'required'" type="password" name="pasword" placeholder="Password">
+      <input
+        v-model="password"
+        v-validate="'required'"
+        type="password"
+        name="pasword"
+        placeholder="Password"
+      >
       <div
         v-if="submitted && errors.has('password')"
         class="invalid-feedback"
@@ -18,7 +24,7 @@
 
 <script>
 import { Auth } from "aws-amplify";
-import { mapActions, mapGetters } from "vuex";
+import { mapActions } from "vuex";
 // https://github.com/ErikCH/Aws-auth-example/blob/master/src/components/HelloWorld.vue
 export default {
   name: "username",
@@ -44,9 +50,6 @@ export default {
         }
       });
     }
-  },
-  computed: {
-    ...mapGetters(["signedIn"])
   }
 };
 </script>
