@@ -1,16 +1,11 @@
-type User @model {
-    id: ID!
-    username: String!
-    email: String! @auth(rules: [{ allow: owner, ownerField: "username" }])
-    firstName: String! @auth(rules: [{ allow: owner, ownerField: "username" }])
-    lastName: String! @auth(rules: [{ allow: owner, ownerField: "username" }])
-    beers: [Beer] @connection(name: "UserBeers")
-}
 
-type Beer @model {
+type Beer @model @auth(rules: [{allow: owner}]) {
   id: ID!
   name: String!
-  owner: User @connection(name: "UserBeers")
   style: String
-  brewery: String
+  brewery: String!
+  public: Boolean!
+  available: Boolean!
 }
+
+

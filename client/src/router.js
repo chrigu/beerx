@@ -30,6 +30,7 @@ export default new Router({
       // which is lazy-loaded when the route is visited.
       component: () => import(/* webpackChunkName: "about" */ './views/Dashboard.vue'),
       beforeEnter: (to, from, next) => {
+        // https://hanezu.github.io/posts/sync-async-and-compound-beforeEnter-guard-with-Vue-Router.html
         if (store.getters.signedIn) {
           next()
         } else {
