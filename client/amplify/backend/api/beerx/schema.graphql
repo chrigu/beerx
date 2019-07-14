@@ -1,3 +1,8 @@
+type User @model {
+    id: ID!
+    username: String
+}
+
 
 type Beer @model @auth(rules: [{allow: owner}]) {
   id: ID!
@@ -6,6 +11,11 @@ type Beer @model @auth(rules: [{allow: owner}]) {
   brewery: String!
   public: Boolean!
   available: Boolean!
+}
+
+type Query {
+  me: User @function(name: "GraphQLResolverFunction")
+  echo(msg: String): String @function(name: "GraphQLResolverFunction")
 }
 
 
